@@ -12,8 +12,18 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+
+    - name: Build reports application (linux)
+      uses: JackMcKew/pyinstaller-action-linux@main
+      with:
+        path: releasefiles/reports2
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: "sm-reports2"
+        path: releasefiles/reports2/dist/linux
     
-    - name: Build reports application
+    - name: Build reports application (windows)
       uses: JackMcKew/pyinstaller-action-windows@main
       with:
         path: releasefiles/reports2
