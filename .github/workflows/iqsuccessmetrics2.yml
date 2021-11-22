@@ -74,22 +74,35 @@ jobs:
             pyinstaller --noupx --onefile --clean --name sm-reports2-${{ runner.os }} sm-reports2.py
             chmod +x dist/*
 
-        - uses: actions/upload-artifact@v2
+        - name: Upload the artifact
+          uses: actions/upload-artifact@v2
           with:
             name: sm-reports2-${{ runner.os }}
             path: releasefiles/reports2/dist
 
 
-    # create_release:
-    #     needs: [build_application, build_reports2]
-    #     name: create release bundle
-    #     runs-on: ubuntu-latest
-    #     steps:
-    #     - name: Create release
-    #       uses: softprops/action-gh-release@v1
-    #       if: startsWith(github.ref, 'refs/tags/')
-    #       with:
-    #         files: successmetrics-*.zip
+    create_release:
+        needs: [build_application, build_reports2]
+        name: create release bundle
+        runs-on: ubuntu-latest
+        steps:
+
+        - name: Create staging area
+          run: mkdir staging
+
+        - name: Download all artifacts
+          uses: actions/download-artifact@v2
+          with:
+            path: staging
+
+        - name: Check what we've got
+          run: ls -Rl staging
+          
+        # - name: Create release
+        #   uses: softprops/action-gh-release@v1
+        #   if: startsWith(github.ref, 'refs/tags/')
+        #   with:
+        #     files: successmetrics-*.zip
 
 
 
