@@ -29,7 +29,7 @@ jobs:
     - name: Build with pyinstaller
       run: |
         cd releasefiles/reports2
-        pyinstaller --noupx --onefile --clean sm-reports2.py
+        pyinstaller --noupx --onefile --clean --name sm-reports2-${{ runner.os }} sm-reports2.py
         chmod +x dist/*
      
     - uses: actions/upload-artifact@v2
