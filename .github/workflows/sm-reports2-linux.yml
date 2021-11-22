@@ -5,10 +5,6 @@ on:
   push:
     branches: [ main ]
 
-env:
-  APP_DIR: releasefiles/reports2
-  DIST_DIR: ${APP_DIR}/dist/linux
-
 jobs:
   build:
 
@@ -28,12 +24,13 @@ jobs:
 
     - name: Build with pyinstaller
       run: |
-        pyinstaller -F --noupx --onefile --clean --distpath ${DIST_DIR} ${APP_DIR}/sm-reports2.py
+        cd releasefiles/reports2
+        pyinstaller -F --noupx --onefile --clean --distpath dist/linux sm-reports2.py
 
     - uses: actions/upload-artifact@v2
       with:
         name: "sm-reports2-linux"
-        path: ${DIST_DIR}
+        path: releasefiles/reports2/dist/linux
 
     # - name: Build reports application (linux)
     #   uses: JackMcKew/pyinstaller-action-linux@main
