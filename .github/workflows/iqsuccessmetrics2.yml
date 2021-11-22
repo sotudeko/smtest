@@ -85,28 +85,27 @@ jobs:
         needs: [build_application, build_reports2]
         name: create release bundle
         runs-on: ubuntu-latest
+        
         steps:
         - uses: actions/checkout@v2
 
-        - name: Where are we?
-          run: ls -Rl
+        # - name: Where are we?
+        #   run: ls -Rl
 
         # - name: Create staging area
         #   run: mkdir staging
 
         - name: Download all artifacts
           uses: actions/download-artifact@v2
-        #   with:
-        #     path: staging
 
         - name: Where are we after download artifacts?
           run: ls -Rl
 
-        - name: Copy reports2 executables
-          run: cp smtest/* releasefiles/reports2
+        # - name: Copy reports2 executables
+        #   run: cp smtest/* releasefiles/reports2
 
-        - name: Check what we've got after unzip
-          run: ls -Rl 
+        # - name: Check what we've got after unzip
+        #   run: ls -Rl 
 
         - name: Build release with Gradle
           run: ./gradlew release
