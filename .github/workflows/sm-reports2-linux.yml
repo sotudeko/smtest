@@ -24,8 +24,7 @@ jobs:
 
     - name: Build with pyinstaller
       run: |
-        cd releasefiles/reports2
-        pyinstaller -F --noupx --onefile --clean --distpath dist/linux sm-reports2.py
+        cd releasefiles/reports2 && pyinstaller -F --noupx --onefile --clean --distpath dist/linux sm-reports2.py
 
     - uses: actions/upload-artifact@v2
       with:
