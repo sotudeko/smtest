@@ -24,7 +24,7 @@ jobs:
 
     - name: Build with pyinstaller
       run: |
-        cd releasefiles/reports2 && pyinstaller --onefile --clean --specpath specdir --distpath distdir --name manual-reports2 sm-reports.py
+        cd releasefiles/reports2 && pyinstaller --onefile --clean --specpath specdir --distpath distdir --name manual-reports2 sm-reports2.py
 
     - uses: actions/upload-artifact@v2
       with:
