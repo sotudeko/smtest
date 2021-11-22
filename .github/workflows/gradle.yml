@@ -1,5 +1,5 @@
 
-name: Build and Release iq-success-metrics2
+name: Build and Release smtest
 
 on:
   push:
