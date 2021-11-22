@@ -17,6 +17,20 @@ jobs:
       with:
         python-version: '3.9.8' 
 
+    - name: Install dependencies
+      run: |
+        python3 -m pip3 install --upgrade pip3
+        pip3 install pyinstaller
+
+    - name: Build with pyinstaller
+      run: |
+        cd releasefiles/reports2 && pyinstaller --onefile --clean --specpath specdir --distpath distdir --name manual-reports2 sm-reports.py
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: "manual-reports2"
+        path: releasefiles/reports2/distdir
+
     - name: Build reports application (linux)
       uses: JackMcKew/pyinstaller-action-linux@main
       with:
