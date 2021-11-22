@@ -97,7 +97,13 @@ jobs:
 
         - name: Check what we've got
           run: ls -Rl staging
-          
+
+        - name: Unzip successmetrics
+          run: cd staging && unzip successmetrics-*.zip
+        
+        - name: Check what we've got after unzip
+          run: ls -Rl 
+
         # - name: Create release
         #   uses: softprops/action-gh-release@v1
         #   if: startsWith(github.ref, 'refs/tags/')
