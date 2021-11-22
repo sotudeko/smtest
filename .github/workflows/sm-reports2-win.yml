@@ -7,7 +7,7 @@ on:
 
 env:
   APP_DIR: releasefiles/reports2
-  DIST_DIR: dist/win
+  DIST_DIR: ${APP_DIR}/dist/win
 
 jobs:
   build:
@@ -33,6 +33,6 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: "sm-reports2-win"
-        path: ${DIST_DIR}/${APP_DIR}
+        path: ${DIST_DIR}
 
     

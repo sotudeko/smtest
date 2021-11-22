@@ -1,5 +1,5 @@
 
-name: Build smtest reports2 application
+name: Build smtest reports2 application (Linux)
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 env:
   APP_DIR: releasefiles/reports2
-  DIST_DIR: dist/linux
+  DIST_DIR: ${APP_DIR}/dist/linux
 
 jobs:
   build:
@@ -33,7 +33,7 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: "sm-reports2-linux"
-        path: ${DIST_DIR}/${APP_DIR}
+        path: ${DIST_DIR}
 
     # - name: Build reports application (linux)
     #   uses: JackMcKew/pyinstaller-action-linux@main
