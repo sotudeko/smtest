@@ -34,7 +34,7 @@ jobs:
      
     - uses: actions/upload-artifact@v2
       with:
-        name: sm-reports2-${{ matrix.os }}
+        name: sm-reports2-${{ runner.os }}
         path: releasefiles/reports2/dist
 
     
