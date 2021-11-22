@@ -87,6 +87,9 @@ jobs:
         runs-on: ubuntu-latest
         steps:
 
+        - name: Where are we?
+          run: ls -Rl
+
         - name: Create staging area
           run: mkdir staging
 
@@ -99,7 +102,7 @@ jobs:
           run: ls -Rl staging
 
         - name: Unzip successmetrics
-          run: cd staging && unzip successmetrics-*.zip
+          run: cd staging/successmetrics && unzip successmetrics-*.zip
         
         - name: Check what we've got after unzip
           run: ls -Rl 
