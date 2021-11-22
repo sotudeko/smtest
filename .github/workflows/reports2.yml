@@ -24,7 +24,7 @@ jobs:
 
     - uses: actions/upload-artifact@v2
       with:
-        name: "sm-reports2"
+        name: "sm-reports2-linux"
         path: releasefiles/reports2/dist/linux
     
     - name: Build reports application (windows)
@@ -34,5 +34,5 @@ jobs:
 
     - uses: actions/upload-artifact@v2
       with:
-        name: "sm-reports2"
+        name: "sm-reports2-win"
         path: releasefiles/reports2/dist/windows
