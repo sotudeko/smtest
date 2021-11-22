@@ -101,8 +101,8 @@ jobs:
         - name: Where are we after download artifacts?
           run: ls -Rl
 
-        # - name: Copy reports2 executables
-        #   run: cp smtest/* releasefiles/reports2
+        - name: Copy reports2 executables
+          run: cp sm-reports2-*/* releasefiles/reports2
 
         # - name: Check what we've got after unzip
         #   run: ls -Rl 
@@ -110,7 +110,14 @@ jobs:
         - name: Build release with Gradle
           run: ./gradlew release
         
-        
+        - name: Where are we after download artifacts - Final?
+          run: ls -Rl
+
+        - name: Upload artifacts
+          uses: actions/upload-artifact@v2
+          with:
+            name: successmetrics
+            path: successmetrics-*.zip
 
         # - name: Create release
         #   uses: softprops/action-gh-release@v1
