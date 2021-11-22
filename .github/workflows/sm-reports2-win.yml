@@ -28,11 +28,12 @@ jobs:
 
     - name: Build with pyinstaller
       run: |
-        pyinstaller -F --noupx --onefile --clean --distpath ${DIST_DIR} ${APP_DIR}/sm-reports2.py
+        cd releasefiles/reports2
+        pyinstaller -F --noupx --onefile --clean --distpath dist/win sm-reports2.py
 
     - uses: actions/upload-artifact@v2
       with:
         name: "sm-reports2-win"
-        path: ${DIST_DIR}
+        path: dist/win
 
     
