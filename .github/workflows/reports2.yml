@@ -16,9 +16,9 @@ jobs:
     - name: Build reports application
       uses: JackMcKew/pyinstaller-action-windows@main
       with:
-        path: reports2
+        path: releasefiles/reports2
 
     - uses: actions/upload-artifact@v2
       with:
         name: "sm-reports2"
-        path: reports2/dist/windows
+        path: releasefiles/reports2/dist/windows
