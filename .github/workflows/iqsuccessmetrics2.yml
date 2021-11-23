@@ -13,6 +13,7 @@ env:
   RELEASE_BRANCH: main
 
 jobs:
+
     build_application:
         name: build success metrics application
         runs-on: ubuntu-latest
@@ -38,14 +39,7 @@ jobs:
           run: chmod +x gradlew
           
         - name: Build with Gradle
-          run: ./gradlew clean build release
-
-        # - name: Upload artifacts
-        #   uses: actions/upload-artifact@v2
-        #   with:
-        #     name: successmetrics
-        #     path: successmetrics-*.zip
-
+          run: ./gradlew clean build
 
     build_reports2:
         name: build reports2 executable
@@ -80,7 +74,6 @@ jobs:
             name: sm-reports2-${{ runner.os }}
             path: releasefiles/reports2/dist
 
-
     create_release:
         needs: [build_application, build_reports2]
         name: create release bundle
@@ -89,75 +82,52 @@ jobs:
         steps:
         - uses: actions/checkout@v2
 
-        # - name: Where are we?
-        #   run: ls -Rl
-
-        # - name: Create staging area
-        #   run: mkdir staging
-
         - name: Download all artifacts
           uses: actions/download-artifact@v2
-
-        - name: Where are we after download artifacts?
-          run: ls -Rl
 
         - name: Copy reports2 executables
           run: cp sm-reports2-*/* releasefiles/reports2
 
-        # - name: Check what we've got after unzip
-        #   run: ls -Rl 
-
         - name: Build release with Gradle
           run: ./gradlew release
-        
-        - name: Where are we after download artifacts - Final?
-          run: ls -Rl
 
-        - name: Upload artifacts
-          uses: actions/upload-artifact@v2
+        - name: Create release
+          uses: softprops/action-gh-release@v1
+          if: startsWith(github.ref, 'refs/tags/')
           with:
-            name: successmetrics
-            path: successmetrics-*.zip
+            files: successmetrics-*.zip
 
-        # - name: Create release
-        #   uses: softprops/action-gh-release@v1
-        #   if: startsWith(github.ref, 'refs/tags/')
-        #   with:
-        #     files: successmetrics-*.zip
+    build_docker_image:
+        needs: build_application
+        name: build docker image
+        runs-on: ubuntu-latest
+        steps:
+        - name: Build image
+          run: docker build . --file Dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
 
+        - name: Log in to registry
+          run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
+        - name: Push image
+          run: |
+              IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
 
-    # build_docker_image:
-    #     needs: build_application
-    #     name: build docker image
-    #     runs-on: ubuntu-latest
-    #     steps:
-    #     - name: Build image
-    #       run: docker build . --file Dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
+              # Change all uppercase to lowercase
+              IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
 
-    #     - name: Log in to registry
-    #       run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+              # Strip git ref prefix from version
+              VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
 
-    #     - name: Push image
-    #       run: |
-    #           IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
+              # Strip "v" prefix from tag name
+              [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
 
-    #           # Change all uppercase to lowercase
-    #           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+              # Use Docker `latest` tag convention
+              [ "$VERSION" == "$RELEASE_BRANCH" ] && VERSION=latest
 
-    #           # Strip git ref prefix from version
-    #           VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+              echo IMAGE_ID=$IMAGE_ID
+              echo VERSION=$VERSION
 
-    #           # Strip "v" prefix from tag name
-    #           [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-
-    #           # Use Docker `latest` tag convention
-    #           [ "$VERSION" == "$RELEASE_BRANCH" ] && VERSION=latest
-
-    #           echo IMAGE_ID=$IMAGE_ID
-    #           echo VERSION=$VERSION
-
-    #           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
-    #           docker push $IMAGE_ID:$VERSION
+              docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
+              docker push $IMAGE_ID:$VERSION
 
     
