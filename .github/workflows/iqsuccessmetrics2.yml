@@ -102,6 +102,8 @@ jobs:
         name: build docker image
         runs-on: ubuntu-latest
         steps:
+        - uses: actions/checkout@v2
+        
         - name: Build image
           run: docker build . --file Dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
 
